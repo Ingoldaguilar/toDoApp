@@ -61,15 +61,26 @@ def add_category():
 
 # add task
 def add_task():
-    task_name = input("Name of the new task\n>")
-    description = input(f"Insert a description for the task {task_name}\n>")
 
     connection = sqlite3.connect("toDo.db")
     cursor = connection.cursor()
 
+    task_name = input("Name of the new task\n>")
+    description = input(f"Insert a description for the task {task_name}\n>")
+
+    # show categories to the user
+    categories = cursor.execute("SELECT * FROM categories").fetchall()
+
+    print("Select a category for the task:")
+    for category in categories:
+        print(f"[{category[0]}] {category[1]}") # id and name
+
+    # get the category
+    category_id = int( input(">") )
+
     try:
         # insert the new task
-        cursor.execute(f"INSERT INTO tasks VALUES(null, '{task_name}', '{description}') ")
+        cursor.execute(f"INSERT INTO tasks VALUES(null, '{task_name}', '{description}', {category_id}) ") # don't work, need to change the database
     except sqlite3.IntegrityError:
         print(f"Error: The task '{task_name}' already exist.")
     else:
@@ -78,8 +89,46 @@ def add_task():
     # save and close
     connection.commit()
     connection.close()
+
+# show menu
+def show_tasks():
+
+    connection = sqlite3.connect("toDo.db")
+    cursor = connection.cursor()
+
+    categories = cursor.execute("SELECT * FROM categories").fetchall()
+    for category in categories:
+        print(category[1])
+        tasks = cursor.execute(f"SELECT * FROM tasks WHERE id={category[0]}").fetchall()
+        for task in tasks:
+            print(f"\t{task[1]}")
+
+    # save and close
+    connection.close()
 # ---------------- End Functions ----------------
 
 # ---------------- Console ----------------
-# create db
-# create_db() Don't create the database yet
+# create_db() database already created
+
+# show menu
+while True:
+    print("\nWelcome to the To Do App")
+    option = input("\nInsert a option:\n[1] Add a category\n[2] Add a task\n[3] Show tasks\n[4] Exit\n>")
+
+    if option == "1":
+        add_category()
+
+    elif option == "2":
+        add_task()
+
+    elif option == "3":
+        show_tasks()
+
+    elif option == "4":
+        print("Bye!")
+        break
+
+    else:
+        print("Error: select a valid option")
+# ---------------- End Console ----------------
+
