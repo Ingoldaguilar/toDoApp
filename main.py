@@ -1,6 +1,6 @@
 # imports
 import sqlite3
-# from tkinter import *
+from tkinter import *
 
 # ---------------- Functions ----------------
 # create db
@@ -109,27 +109,43 @@ def show_tasks():
     connection.close()
 # ---------------- End Functions ----------------
 
+# ---------------- GUI ----------------
+# root
+root = Tk()
+root.title("To Do App")
+root.iconbitmap("toDoIcon.ico")
+root.resizable(False, False)
+root.geometry("500x500")
+
+
+ # Buttons
+Button(text="Exit", command=root.quit).pack()
+
+# mainloop
+root.mainloop()
+# ---------------- End GUI ----------------
+
 # ---------------- Console ----------------
 # create_db() database created.
 
 # show menu
-while True:
-    print("\nWelcome to the To Do App")
-    option = input("\nInsert a option:\n[1] Add a category\n[2] Add a task\n[3] Show tasks\n[4] Exit\n>")
+#while True:
+    #print("\nWelcome to the To Do App")
+    #option = input("\nInsert a option:\n[1] Add a category\n[2] Add a task\n[3] Show tasks\n[4] Exit\n>")
 
-    if option == "1":
-        add_category()
+    #if option == "1":
+        #add_category()
 
-    elif option == "2":
-        add_task()
+    #elif option == "2":
+        #add_task()
 
-    elif option == "3":
-        show_tasks()
+    #elif option == "3":
+        #show_tasks()
 
-    elif option == "4":
-        print("Bye!")
-        break
+    #elif option == "4":
+        #print("Bye!")
+        #break
 
-    else:
-        print("Error: select a valid option")
+    #else:
+        #print("Error: select a valid option")
 # ---------------- End Console ----------------
