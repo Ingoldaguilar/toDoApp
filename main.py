@@ -109,7 +109,7 @@ def show_tasks():
 # ---------------- End Functions ----------------
 
 # ---------------- Console ----------------
-# create_db() database already created
+create_db()  # database created.
 
 # show menu
 while True:
@@ -132,4 +132,3 @@ while True:
     else:
         print("Error: select a valid option")
 # ---------------- End Console ----------------
-
