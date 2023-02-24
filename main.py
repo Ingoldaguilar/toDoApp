@@ -1,6 +1,6 @@
 # imports
 import sqlite3
-from tkinter import *
+# from tkinter import *
 
 # ---------------- Functions ----------------
 # create db
@@ -14,7 +14,7 @@ def create_db():
         # possible changes -> task_id
         cursor.execute("""
         CREATE TABLE categories(
-                cat_id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                id INTEGER PRIMARY KEY AUTOINCREMENT, 
                 name VARCHAR(100) UNIQUE NOT NULL
         ) 
         """)
@@ -29,7 +29,8 @@ def create_db():
                 id INTEGER PRIMARY KEY AUTOINCREMENT, 
                 name VARCHAR(100) UNIQUE NOT NULL,
                 description VARCHAR(1000) NOT NULL,
-                FOREIGN KEY(id) REFERENCES categories(cat_id)
+                category_id INTEGER NOT NULL, 
+                FOREIGN KEY(category_id) REFERENCES categories(id)
         ) 
         """)
     except sqlite3.OperationalError:
@@ -80,7 +81,7 @@ def add_task():
 
     try:
         # insert the new task
-        cursor.execute(f"INSERT INTO tasks VALUES(null, '{task_name}', '{description}', {category_id}) ") # don't work, need to change the database
+        cursor.execute(f"INSERT INTO tasks VALUES(null, '{task_name}', '{description}', {category_id}) ")
     except sqlite3.IntegrityError:
         print(f"Error: The task '{task_name}' already exist.")
     else:
