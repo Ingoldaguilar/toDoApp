@@ -99,17 +99,18 @@ def show_tasks():
 
     categories = cursor.execute("SELECT * FROM categories").fetchall()
     for category in categories:
-        print(category[1])
+        print("||"+category[1]+"||")
         tasks = cursor.execute(f"SELECT * FROM tasks WHERE id={category[0]}").fetchall()
         for task in tasks:
-            print(f"\t{task[1]}")
+            print(f"\t>{task[1]}")
+            print(f"\t  .{task[2]}")
 
     # save and close
     connection.close()
 # ---------------- End Functions ----------------
 
 # ---------------- Console ----------------
-create_db()  # database created.
+# create_db() database created.
 
 # show menu
 while True:
