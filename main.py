@@ -119,6 +119,33 @@ def delete_task():
     connection.commit()
     connection.close()
 
+def delete_category():
+
+    connection = sqlite3.connect("toDo.db")
+    cursor = connection.cursor()
+
+    # show categories to the user
+    categories = cursor.execute("SELECT * FROM categories").fetchall()
+
+    print("\t||Categories||")
+    for category in categories:
+        print(f">{category[1]}") # name
+
+    cat_name = input("Insert the name of the category you want to delete\n>")
+
+    # Reminder: capture the error when delete a non-existing table
+    try:
+        # insert the new task
+        cursor.execute(f"DELETE FROM categories WHERE name='{cat_name}'")
+    except sqlite3.OperationalError:
+        print(f"Error: The category  '{cat_name}' doesn't exist.")
+    else:
+        print(f"Category '{cat_name}' deleted successfully.")
+
+    # save and close
+    connection.commit()
+    connection.close()
+
 # show menu
 def show_tasks():
 
@@ -159,21 +186,24 @@ def show_tasks():
 # show menu
 while True:
     print("\nWelcome to the To Do App")
-    option = input("\nInsert a option:\n[1] Add a category\n[2] Add a task\n[3] Delete a task\n[4] Show tasks\n[5] Exit\n>")
+    option = input("\nInsert a option:\n[1] Add a category\n[2] Delete a category\n[3] Add a task\n[4] Delete a task\n[5] Show tasks\n[6] Exit\n>")
 
     if option == "1":
         add_category()
 
     elif option == "2":
-        add_task()
+        delete_category()
 
     elif option == "3":
-        delete_task()
+        add_task()
 
     elif option == "4":
-        show_tasks()
+        delete_task()
 
     elif option == "5":
+        show_tasks()
+
+    elif option == "6":
         print("Bye!")
         break
 
