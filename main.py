@@ -171,32 +171,40 @@ def upload_task():
 
     # show categories to the user
     tasks = cursor.execute("SELECT * FROM tasks").fetchall()
-
     print("\t||Tasks||")
     for task in tasks:
         print(f">{task[1]}") # name
 
     task_name = input("Insert the name of the task you want to upload\n>")
+    task_description = cursor.execute(f"SELECT description FROM tasks WHERE name='{task_name}'").fetchone()
+    task_category_id = cursor.execute(f"SELECT category_id FROM tasks WHERE name='{task_name}'").fetchone()
 
     # ask for the new information
+    # add an if here for confirm the task name do exist. If not, don't execute anything
 
     # ---- Name ----
     opc = input("Do you want to upload the name of your task?\n[1] yes\n[2] no\n>")
     if opc == 1:
         # get the new task name
         new_name = input(f"Introduce the new name for the task {task_name}")
+    else:
+        new_name = task_name
 
     # ---- Description ----
     opc2 = input("Do you want to upload the description of your task?\n[1] yes\n[2] no\n>")
     if opc2 == 1:
         # get the new task name
         new_description = input(f"Introduce the new description for the task {task_name}")
+    else:
+        new_description = task_description
 
     # ---- Category ID ----
     opc3 = input("Do you want to upload the category of your task?\n[1] yes\n[2] no\n>")
     if opc3 == 1:
         # get the new task name
         new_category_id = input(f"Introduce the new category of the task {task_name}")
+    else:
+        new_category_id = task_category_id
 
     try:
         cursor.execute(f"UPDATE tasks SET name='{new_name}', description={new_description}, category_id='{new_category_id}' WHERE name='{task_name}'")
