@@ -162,6 +162,80 @@ def show_tasks():
 
     # save and close
     connection.close()
+
+
+def upload_task():
+
+    connection = sqlite3.connect("toDo.db")
+    cursor = connection.cursor()
+
+    # show categories to the user
+    tasks = cursor.execute("SELECT * FROM tasks").fetchall()
+
+    print("\t||Tasks||")
+    for task in tasks:
+        print(f">{task[1]}") # name
+
+    task_name = input("Insert the name of the task you want to upload\n>")
+
+    # ask for the new information
+
+    # ---- Name ----
+    opc = input("Do you want to upload the name of your task?\n[1] yes\n[2] no\n>")
+    if opc == 1:
+        # get the new task name
+        new_name = input(f"Introduce the new name for the task {task_name}")
+
+    # ---- Description ----
+    opc2 = input("Do you want to upload the description of your task?\n[1] yes\n[2] no\n>")
+    if opc2 == 1:
+        # get the new task name
+        new_description = input(f"Introduce the new description for the task {task_name}")
+
+    # ---- Category ID ----
+    opc3 = input("Do you want to upload the category of your task?\n[1] yes\n[2] no\n>")
+    if opc3 == 1:
+        # get the new task name
+        new_category_id = input(f"Introduce the new category of the task {task_name}")
+
+    try:
+        cursor.execute(f"UPDATE tasks SET name='{new_name}', description={new_description}, category_id='{new_category_id}' WHERE name='{task_name}'")
+    except sqlite3.OperationalError:
+        print(f"Error: The task '{task_name}' doesn't exist.")
+    else:
+        print(f"Task '{task_name}' uploaded successfully.")
+
+    # save and close
+    connection.commit()
+    connection.close()
+
+def upload_category():
+
+    connection = sqlite3.connect("toDo.db")
+    cursor = connection.cursor()
+
+    # show categories to the user
+    categories = cursor.execute("SELECT * FROM categories").fetchall()
+
+    print("\t||Categories||")
+    for category in categories:
+        print(f">{category[1]}") # name
+
+    cat_name = input("Insert the name of the category you want to delete\n>")
+
+    # Reminder: capture the error when delete a non-existing table
+    try:
+        # insert the new task
+        cursor.execute(f"DELETE FROM categories WHERE name='{cat_name}'")
+    except sqlite3.OperationalError:
+        print(f"Error: The category  '{cat_name}' doesn't exist.")
+    else:
+        print(f"Category '{cat_name}' deleted successfully.")
+
+    # save and close
+    connection.commit()
+    connection.close()
+
 # ---------------- End Functions ----------------
 
 # ---------------- GUI ----------------
@@ -182,6 +256,17 @@ def show_tasks():
 
 # ---------------- Console ----------------
 # create_db() database created.
+
+"""
+Reminder: Some bugs appear, fix them.
+
+> Numbers when showing the tasks or categories.
+> The Delete functions, capture the correct error. | Upload: It's no possible to capture that error!
+
+Add an Upload option for both tasks and categories.
+
+Add GUI.
+"""
 
 # show menu
 while True:
