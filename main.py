@@ -279,24 +279,30 @@ Add GUI.
 # show menu
 while True:
     print("\nWelcome to the To Do App")
-    option = input("\nInsert a option:\n[1] Add a category\n[2] Delete a category\n[3] Add a task\n[4] Delete a task\n[5] Show tasks\n[6] Exit\n>")
+    option = input("\nInsert a option:\n[1] Add a category\n[2] Upload a category\n[3] Delete a category\n[4] Add a task\n[5] Upload a task\n[6] Delete a task\n[7] Show tasks\n[8] Exit\n>")
 
     if option == "1":
         add_category()
 
-    elif option == "2":
-        delete_category()
+    elif option == "3":
+        upload_category()
 
     elif option == "3":
-        add_task()
+        delete_category()
 
     elif option == "4":
-        delete_task()
+        add_task()
 
     elif option == "5":
-        show_tasks()
+        upload_task()
 
     elif option == "6":
+        delete_task()
+
+    elif option == "7":
+        show_tasks()
+
+    elif option == "8":
         print("Bye!")
         break
 
