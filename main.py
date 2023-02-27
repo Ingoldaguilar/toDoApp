@@ -169,7 +169,7 @@ def upload_task():
     connection = sqlite3.connect("toDo.db")
     cursor = connection.cursor()
 
-    # show categories to the user
+    # show tasks to the user
     tasks = cursor.execute("SELECT * FROM tasks").fetchall()
     print("\t||Tasks||")
     for task in tasks:
@@ -179,39 +179,54 @@ def upload_task():
     task_description = cursor.execute(f"SELECT description FROM tasks WHERE name='{task_name}'").fetchone()
     task_category_id = cursor.execute(f"SELECT category_id FROM tasks WHERE name='{task_name}'").fetchone()
 
-    # ask for the new information
-    # add an if here for confirm the task name do exist. If not, don't execute anything
+    # get if the name exist or not
+    exist = False
+    for task in tasks:
+        if task_name == task[1]:
+            exist = True
 
-    # ---- Name ----
-    opc = input("Do you want to upload the name of your task?\n[1] yes\n[2] no\n>")
-    if opc == 1:
-        # get the new task name
-        new_name = input(f"Introduce the new name for the task {task_name}")
+    if exist:
+        # name do exist
+
+        # ---- Name ----
+        opc = input("Do you want to upload the name of your task?\n[1] yes\n[2] no\n>")
+        if opc == 1:
+            # get the new task name
+            new_name = input(f"Introduce the new name for the task {task_name}")
+        else:
+            new_name = task_name
+
+        # ---- Description ----
+        opc2 = input("Do you want to upload the description of your task?\n[1] yes\n[2] no\n>")
+        if opc2 == 1:
+            # get the new task name
+            new_description = input(f"Introduce the new description for the task {task_name}")
+        else:
+            new_description = task_description
+
+        # ---- Category ID ----
+        opc3 = input("Do you want to upload the category of your task?\n[1] yes\n[2] no\n>")
+        if opc3 == 1:
+            # get the new task name
+            new_category_id = input(f"Introduce the new category of the task {task_name}")
+        else:
+            new_category_id = task_category_id
+
+        # ---- Look if he changes something ----
+        if opc == 1 or opc2 == 1 or opc3 == 1:
+            # if changed something, then try the update
+            try:
+                cursor.execute(f"UPDATE tasks SET name='{new_name}', description={new_description}, category_id='{new_category_id}' WHERE name='{task_name}'")
+            except sqlite3.OperationalError:
+                print(f"Error: The task '{task_name}' doesn't exist.")
+            else:
+                print(f"Task '{task_name}' uploaded successfully.")
+        else:
+            # if not don't execute it
+            print(f"The task '{task_name}' has not been modified.")
     else:
-        new_name = task_name
-
-    # ---- Description ----
-    opc2 = input("Do you want to upload the description of your task?\n[1] yes\n[2] no\n>")
-    if opc2 == 1:
-        # get the new task name
-        new_description = input(f"Introduce the new description for the task {task_name}")
-    else:
-        new_description = task_description
-
-    # ---- Category ID ----
-    opc3 = input("Do you want to upload the category of your task?\n[1] yes\n[2] no\n>")
-    if opc3 == 1:
-        # get the new task name
-        new_category_id = input(f"Introduce the new category of the task {task_name}")
-    else:
-        new_category_id = task_category_id
-
-    try:
-        cursor.execute(f"UPDATE tasks SET name='{new_name}', description={new_description}, category_id='{new_category_id}' WHERE name='{task_name}'")
-    except sqlite3.OperationalError:
+        # name searched doesn't exist
         print(f"Error: The task '{task_name}' doesn't exist.")
-    else:
-        print(f"Task '{task_name}' uploaded successfully.")
 
     # save and close
     connection.commit()
@@ -224,23 +239,40 @@ def upload_category():
 
     # show categories to the user
     categories = cursor.execute("SELECT * FROM categories").fetchall()
-
     print("\t||Categories||")
     for category in categories:
         print(f">{category[1]}") # name
 
+    # --- Get name ---
     cat_name = input("Insert the name of the category you want to delete\n>")
 
-    # Reminder: capture the error when delete a non-existing table
-    try:
-        # insert the new task
-        cursor.execute(f"DELETE FROM categories WHERE name='{cat_name}'")
-    except sqlite3.OperationalError:
-        print(f"Error: The category  '{cat_name}' doesn't exist.")
-    else:
-        print(f"Category '{cat_name}' deleted successfully.")
+    # ---- verify if the name exists ----
+    exist = False
+    for cat in categories:
+        if cat_name == cat[1]:
+            exist = True
 
-    # save and close
+    if exist:
+        # ---- Name ----
+        opc = input("Do you want to upload the name of your category?\n[1] yes\n[2] no\n>")
+        if opc == 1:
+            # get the new task name
+            new_name = input(f"Introduce the new name for the category {cat_name}")
+
+            # upload name
+            try:
+                cursor.execute(
+                    f"UPDATE categories SET name='{new_name}' WHERE name='{cat_name}'")
+            except sqlite3.OperationalError:
+                print(f"Error: The category '{cat_name}' doesn't exist.")
+            else:
+                print(f"Category '{cat_name}' uploaded successfully.")
+        else:
+            print(f"The category '{cat_name}' has not been modified.")
+    else:
+        print(f"Error: The category '{cat_name}' doesn't exist.")
+
+   # save and close
     connection.commit()
     connection.close()
 
